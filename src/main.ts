@@ -1,11 +1,20 @@
+// 타입스크립트 트레이스 백 지원.
+require('source-map-support').install();
+process.on('unhandledRejection', console.log);
+
+
 import Discord, {Message} from 'discord.js';
 import {Parser} from "./command/parser";
+import {Database} from "./db/database";
+import {CharacterCommand} from "./command/character";
+import {CharacterDocuments} from "./db/model/character";
+
 const { token } = require ( "../config.json" ) ;
 
 let client = new Discord.Client();
 let parsing = new Parser();
 
-parsing.addCallback('roll', (params : string | null)  =>
+parsing.addCallback('roll', async (params : string | null)  =>
 {
     let err_string = `ERROR! 사용법 : !roll <주사위 최대값> <?주사위 굴릴 횟수>`;
 
@@ -29,18 +38,21 @@ parsing.addCallback('roll', (params : string | null)  =>
     return result_string;
 });
 
+CharacterCommand.addCommand( parsing );
 
-client.once( 'ready', () => {
+client.once( 'ready', async () => {
+    await Database.ClearDatabase();
+    await Database.AddModels([CharacterDocuments]);
     console.log("READY.");
 });
 
-client.on( 'message', ( message : Message )  =>
+client.on( 'message', async ( message : Message )  =>
 {
-    let result = parsing.onMessage( message.content );
+    let result = await parsing.onMessage( message.content );
 
     if( result != null )
     {
-        message.channel.send( result );
+        await message.channel.send( result );
     }
 } );
 

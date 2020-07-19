@@ -1,4 +1,4 @@
-export type CommandCallback = (params : string | null, command :string, message : string) => string;
+export type CommandCallback = (params : string | null, command :string, message : string) => Promise<string>;
 
 export class Parser
 {
@@ -16,7 +16,7 @@ export class Parser
     }
 
 
-    onMessage( message : string ) : string | null
+    async onMessage( message : string ) : Promise<string | null>
     {
         let command_parse = this.command_check_regex.exec( message );
         if ( command_parse == null ) { return null; }
@@ -27,6 +27,12 @@ export class Parser
         let callback = this.parser_map.get(command);
         if( callback == null ) { return null; }
 
-        return callback( params, command, message );
+        let result = await callback( params, command, message );
+        if( result == "" )
+        {
+            return null;
+        }
+
+        return result;
     }
 }
