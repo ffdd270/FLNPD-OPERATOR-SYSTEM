@@ -49,7 +49,6 @@
     // 자세한 내용은 문제 #1232를 참조
     "noStrictGenericChecks": true, // 함수에서 generic의 엄격한 검사 해제 여부
     "noUnusedLocals": true, // 사용안된 지역변수에 대한 오류 보고 여부
-    "noUnusedParameters": true,  // 사용안된 파라미터에 대한 오류 보고 여부
 
     /////////// edit outfile ///////////
     "charset": "utf8", // 입력파일의 문자집합 형식

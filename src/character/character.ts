@@ -1,4 +1,4 @@
-import {CharacterDocuments} from "../db/model/character";
+import {CharacterDocuments} from "../db/documents/character";
 
 
 export class Character

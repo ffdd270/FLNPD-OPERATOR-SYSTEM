@@ -1,16 +1,13 @@
 import {Table, Column, Model, DataType} from 'sequelize-typescript';
 
 @Table
-export class CharacterDocuments extends  Model<CharacterDocuments>
+export class ChannelDocuments extends  Model<ChannelDocuments>
 {
     @Column( { primaryKey: true, type: DataType.STRING } )
-    id! : string;
+    channel_id! : string;
 
     @Column( DataType.TEXT )
-    name! : string;
-
-    @Column(DataType.INTEGER)
-    hp! : number;
+    room_id! : string;
 
     @Column( DataType.DATE )
     create_tm! : Date;

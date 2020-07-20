@@ -1,14 +1,18 @@
 import {Parser} from "./parser";
-import {CharacterDocuments} from "../db/model/character";
-import {Model} from "sequelize-typescript";
+import {CharacterDocuments} from "../db/documents/character";
+import {Message} from "discord.js";
+import {CharacterModel} from "../model/character";
 
 export class CharacterCommand
 {
     static unit_and_number_regex = /^"(.+)"\s(\d+)/;
 
-    static async AddActor( params : string | null )
+    static async AddActor( params : string | null, message : Message )
     {
-        let error_string = 'ERROR! 사용법 : !add_actor "<캐릭터 이름>"';
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+        if( room_id == null ) { return CharacterModel.NoRoomError; }
+
+        let error_string = '땡. 사용법은 !add_actor "<캐릭터 이름>" 야,';
         if ( params == null ) { return error_string; }
 
         let regex = /^"(.+)"$/
@@ -17,37 +21,43 @@ export class CharacterCommand
         if( add_actor_param == null ) {  return error_string; }
         let name = add_actor_param[1];
 
-        let find =  await CharacterDocuments.findOne( { where: { id: name } } );
+        let find =  await CharacterDocuments.findOne( { where: { id: name, room_id: room_id } } );
         if( find != null )
         {
-            return name + " 은 이미 있습니다.";
+            return name + "은(는) 이미 있어.";
         }
 
-        let character = new CharacterDocuments(  { id: name, name: name, hp: 5 } );
+        let character = new CharacterDocuments(  { id: name, room_id: room_id ,name: name, hp: 5 } );
         await character.save(); // 저장하고 간다.
-        return name + "를 생성하였습니다!";
+        return name + "를 만들었어!";
     }
 
-    static async SetHp( params : string | null )
+    static async SetHp( params : string | null, message : Message )
     {
-        let error_string = 'ERROR! 사용법 : !set_hp "<캐릭터 이름>" <HP> # 오퍼레이터만 쓰세요.';
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+        if( room_id == null ) { return CharacterModel.NoRoomError; }
+
+        let error_string = '땡. 사용법은 !set_hp "<캐릭터 이름>" <HP> 야. 오퍼레이터만 쓰는 게 좋을 것 같아.';
         if ( params == null ) { return error_string; }
 
         let set_hp_param = CharacterCommand.unit_and_number_regex.exec( params );
         if ( set_hp_param == null ) { return error_string; }
 
-        let character_doc = await CharacterDocuments.findOne( { where: { id: set_hp_param[1] } })
-        if( character_doc == null ) { return "존재하지 않는 캐릭터입니다!"; }
+        let character_doc = await CharacterDocuments.findOne( { where: { id: set_hp_param[1], room_id: room_id } })
+        if( character_doc == null ) { return CharacterModel.NoCharacterError; }
 
         character_doc.hp = Number.parseInt( set_hp_param[2] );
         await character_doc.save();
 
-        return character_doc.name + "의 체력이 " + character_doc.hp + "가 되었습니다.";
+        return character_doc.name + "의 체력이 " + character_doc.hp + "가 되었어.";
     }
 
-    static async Attack( params : string | null )
+    static async Attack( params : string | null, message : Message  )
     {
-        let error_string = 'ERROR! 사용법 : !attack <공격할 사람> <데미지>';
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+        if( room_id == null ) { return CharacterModel.NoRoomError; }
+
+        let error_string = '땡. 사용법은  !attack <공격할 사람> <데미지> 야.';
 
         if( params == null ) { return error_string; }
 
@@ -58,21 +68,24 @@ export class CharacterCommand
         let target = attack_param[1];
 
         let dmg = Number.parseInt( attack_param[2] );
-        let character_doc = await CharacterDocuments.findOne(  { where: { id : target } } );
+        let character_doc = await CharacterDocuments.findOne(  { where: { id : target, room_id: room_id } } );
 
-        if( character_doc == null ) { return "ERROR : 존재하지 않는 캐릭터입니다."; }
+        if( character_doc == null ) { return CharacterModel.NoCharacterError; }
 
         character_doc.hp -= dmg;
         let after = character_doc.hp;
 
         character_doc.save();
 
-        return "공격! " + dmg + "데미지. 남은 체력 : " + after;
+        return "공격! " + dmg + "데미지를 받았고, 남은 체력은 " + after + "야.";
     }
 
-    static async GetStatus(  )
+    static async GetStatus( params : string | null, message : Message )
     {
-        let character_docs = await CharacterDocuments.findAll();
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+        if( room_id == null ) { return CharacterModel.NoRoomError; }
+
+        let character_docs = await CharacterDocuments.findAll( { where: { room_id: room_id } });
         let result_string = "";
 
         for( let doc of character_docs )
@@ -80,20 +93,18 @@ export class CharacterCommand
             result_string +=  doc.name + " / 남은 체력 : " + doc.hp + "\n";
         }
 
-        result_string = result_string == "" ?  "캐릭터가 존재하지 않습니다!" : result_string;
-
+        result_string = result_string == "" ?  "엇. 캐릭터가 없어." : result_string + " 이상. 보고 끝! ";
         return result_string;
     }
 
-    static async Drop()
+    static async Drop( params : string | null, message : Message )
     {
-        let character_docs : Model<CharacterDocuments>[]  = await CharacterDocuments.findAll();
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+        if( room_id == null ) { return CharacterModel.NoRoomError; }
 
-        if ( character_docs == null ) { return ""; }
+        await CharacterDocuments.destroy( { where: { room_id: room_id } } );
 
-        await CharacterDocuments.destroy( { where: { } } );
-
-        return "캐릭터가 모두 삭제되었습니다.";
+        return "야호! 캐릭터를 모두 날려 버렸어!";
     }
 
     static addCommand( parser : Parser )
