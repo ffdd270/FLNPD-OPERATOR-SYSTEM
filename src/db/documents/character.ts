@@ -14,7 +14,16 @@ export class CharacterDocuments extends  Model<CharacterDocuments>
     name! : string;
 
     @Column(DataType.INTEGER)
+    hp_max! : number;
+
+    @Column(DataType.INTEGER)
     hp! : number;
+
+    @Column(DataType.INTEGER)
+    sp_max! : number;
+
+    @Column(DataType.INTEGER)
+    sp! : number;
 
     @Column( DataType.DATE )
     create_tm! : Date;

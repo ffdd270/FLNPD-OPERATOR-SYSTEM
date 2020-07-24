@@ -3,16 +3,17 @@ import {CharacterDocuments} from "../db/documents/character";
 import {Message} from "discord.js";
 import {CharacterModel} from "../model/character";
 
-export class CharacterCommand
+export class CharacterCommands
 {
     static unit_and_number_regex = /^"(.+)"\s(\d+)/;
+    static percent_regex =  /\d*\.?\d?\d/;
 
     static async AddActor( params : string | null, message : Message )
     {
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
         if( room_id == null ) { return CharacterModel.NoRoomError; }
 
-        let error_string = '땡. 사용법은 !add_actor "<캐릭터 이름>" 야,';
+        let error_string = '땡. 사용법은 !add "<캐릭터 이름>" 야,';
         if ( params == null ) { return error_string; }
 
         let regex = /^"(.+)"$/
@@ -27,9 +28,12 @@ export class CharacterCommand
             return name + "은(는) 이미 있어.";
         }
 
-        let character = new CharacterDocuments(  { id: name, room_id: room_id ,name: name, hp: 5 } );
+        let character = new CharacterDocuments(  { id: name, room_id: room_id ,name: name,
+            hp: 5, hp_max: 5, sp: 0, sp_max: 0 } );
+
         await character.save(); // 저장하고 간다.
-        return name + "를 만들었어!";
+
+        return name + "을(를) 만들었어.";
     }
 
     static async SetHp( params : string | null, message : Message )
@@ -40,16 +44,19 @@ export class CharacterCommand
         let error_string = '땡. 사용법은 !set_hp "<캐릭터 이름>" <HP> 야. 오퍼레이터만 쓰는 게 좋을 것 같아.';
         if ( params == null ) { return error_string; }
 
-        let set_hp_param = CharacterCommand.unit_and_number_regex.exec( params );
+        let set_hp_param = CharacterCommands.unit_and_number_regex.exec( params );
         if ( set_hp_param == null ) { return error_string; }
 
         let character_doc = await CharacterDocuments.findOne( { where: { id: set_hp_param[1], room_id: room_id } })
         if( character_doc == null ) { return CharacterModel.NoCharacterError; }
 
-        character_doc.hp = Number.parseInt( set_hp_param[2] );
+        let hp_max = Number.parseInt( set_hp_param[2] );
+        character_doc.hp = hp_max;
+        character_doc.hp_max = hp_max;
+
         await character_doc.save();
 
-        return character_doc.name + "의 체력이 " + character_doc.hp + "가 되었어.";
+        return character_doc.name + "의 최대 체력과 채력이 " + character_doc.hp_max + "이 되었어.";
     }
 
 
@@ -62,7 +69,7 @@ export class CharacterCommand
 
         if( params == null ) { return error_string; }
 
-        let attack_param = CharacterCommand.unit_and_number_regex.exec( params );
+        let attack_param = CharacterCommands.unit_and_number_regex.exec( params );
 
         if( attack_param == null ) { return error_string; }
 
@@ -78,7 +85,12 @@ export class CharacterCommand
 
         character_doc.save();
 
-        return character_doc.name + "은(는) " + dmg + "데미지를 받았고, 체력은 " + after + " 남았어.";
+        let hp_max = character_doc.hp_max == null || character_doc.hp_max == 0 ? 1 : character_doc.hp_max;
+        let percent = ( character_doc.hp / hp_max ) * 100;
+        let percent_regex  = CharacterCommands.percent_regex.exec( percent.toString() );
+        let percent_string = percent_regex ? percent_regex[0] : "ERROR_PERCENT" ;
+
+        return character_doc.name + "은(는) " + dmg + "데미지를 받았고, 체력은 " + after + "(" + percent_string + "%) 남았어.";
     }
 
     static async GetStatus( params : string | null, message : Message )
@@ -91,10 +103,19 @@ export class CharacterCommand
 
         for( let doc of character_docs )
         {
-            result_string +=  doc.name + " / 남은 체력 : " + doc.hp + "\n";
+            let hp_max = doc.hp_max == null || doc.hp_max == 0 ? 1 : doc.hp_max;
+            let percent = ( doc.hp / hp_max ) * 100;
+            let percent_string = CharacterCommands.percent_regex.exec( percent.toString() );
+
+            let sp_max = doc.sp_max == null || doc.sp_max == 0 ? 1 : doc.sp_max;
+            let sp_percent = ( doc.sp / sp_max ) * 100;
+            let sp_percent_string = CharacterCommands.percent_regex.exec( sp_percent.toString() );
+
+            result_string += doc.name + " : HP " + doc.hp + "/" + doc.hp_max + "(" + percent_string + "%)" + ","
+                + " SP " + doc.sp + "/" + doc.sp_max + "(" + sp_percent_string + "%)" + "\n";
         }
 
-        result_string = result_string == "" ?  "엇. 캐릭터가 없어." : result_string + " 이상. 보고 끝! ";
+        result_string = result_string == "" ?  "캐릭터가 없어." : result_string + "이상. 보고 끝.";
         return result_string;
     }
 

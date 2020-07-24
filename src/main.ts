@@ -8,7 +8,7 @@ import Discord, {Message} from 'discord.js';
 import {Parser} from "./command/parser";
 import {Database} from "./db/database";
 
-import {CharacterCommand} from "./command/character";
+import {CharacterCommands} from "./command/character";
 import {ChannelCommand} from "./command/channel";
 import {HelpCommands} from "./command/help";
 
@@ -44,7 +44,7 @@ parsing.addCallback('roll', async (params : string | null)  =>
     return result_string;
 });
 
-CharacterCommand.addCommand( parsing );
+CharacterCommands.addCommand( parsing );
 ChannelCommand.addCommand( parsing );
 HelpCommands.addCommand( parsing );
 
