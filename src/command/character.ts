@@ -52,6 +52,7 @@ export class CharacterCommand
         return character_doc.name + "의 체력이 " + character_doc.hp + "가 되었어.";
     }
 
+
     static async Attack( params : string | null, message : Message  )
     {
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
@@ -77,7 +78,7 @@ export class CharacterCommand
 
         character_doc.save();
 
-        return "공격! " + dmg + "데미지를 받았고, 남은 체력은 " + after + "야.";
+        return character_doc.name + "은(는) " + dmg + "데미지를 받았고, 체력은 " + after + " 남았어.";
     }
 
     static async GetStatus( params : string | null, message : Message )
@@ -97,7 +98,7 @@ export class CharacterCommand
         return result_string;
     }
 
-    static async Drop( params : string | null, message : Message )
+    static async DropAll(params : string | null, message : Message )
     {
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
         if( room_id == null ) { return CharacterModel.NoRoomError; }
@@ -113,6 +114,6 @@ export class CharacterCommand
         parser.addCallback( "set_hp", this.SetHp );
         parser.addCallback( 'attack', this.Attack );
         parser.addCallback( 'status', this.GetStatus );
-        parser.addCallback( 'DROP_ALL', this.Drop );
+        parser.addCallback( 'DROP_ALL', this.DropAll );
     }
 }
