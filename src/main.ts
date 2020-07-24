@@ -10,6 +10,7 @@ import {Database} from "./db/database";
 
 import {CharacterCommand} from "./command/character";
 import {ChannelCommand} from "./command/channel";
+import {HelpCommands} from "./command/help";
 
 import {CharacterDocuments} from "./db/documents/character";
 import {ChannelDocuments} from "./db/documents/channel";
@@ -45,6 +46,7 @@ parsing.addCallback('roll', async (params : string | null)  =>
 
 CharacterCommand.addCommand( parsing );
 ChannelCommand.addCommand( parsing );
+HelpCommands.addCommand( parsing );
 
 client.once( 'ready', async () => {
     await Database.ClearDatabase();
