@@ -45,9 +45,9 @@
               "usage": "set_group <group_id> <params>..."
             },
             {
-              "command": "DROP_ALL",
-              "data": "강력한 명령어야. 현재 전투를 날려버려. 응. 무서운 명령어지. 조심히 써. 진짜로 지워버려서, 이 지구 상에서 찾아 볼 수 없게 될테니. 사용법은 !DROP_ALL . 끝이야. 뭘 넣을 것도 없어.",
-              "usage": "DROP_ALL"
+              "command": "KILL_ALL",
+              "data": "강력한 명령어야. 현재 전투를 날려버려. 응. 무서운 명령어지. 조심히 써. 진짜로 지워버려서, 이 지구 상에서 찾아 볼 수 없게 될테니. 사용법은 !KILL_ALL ",
+              "usage": "KILL_ALL"
             },
             {
               "command": "what_room",

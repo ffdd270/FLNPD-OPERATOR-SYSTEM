@@ -29,12 +29,26 @@ export class Parser
         let callback = this.parser_map.get(command);
         if( callback == null ) { return null; }
 
-        let result = await callback( params, message );
-        if( result == "" )
+        try
         {
-            return null;
-        }
+            let result = await callback( params, message );
+            if( result == "" )
+            {
+                return null;
+            }
 
-        return result;
+            return result;
+        }
+        catch( error_obj )
+        {
+            if ( error_obj.error_string != undefined )
+            {
+                return error_obj.error_string;
+            }
+            else
+            {
+                return error_obj.Message;
+            }
+        }
     }
 }
