@@ -21,7 +21,7 @@ export class CharacterCommands
         let find = await CharacterModel.GetTargetDocument( params, room_id, obj );
         let name = CharacterModel.GetTargetName( params );
 
-        if( find == null )
+        if( find != null )
         {
             return name + "은(는) 이미 있어.";
         }
