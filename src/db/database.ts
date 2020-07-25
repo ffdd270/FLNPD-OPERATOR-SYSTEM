@@ -4,9 +4,9 @@ import {Sequelize, ModelCtor} from "sequelize-typescript";
 export class Database
 {
     private static sequelize : Sequelize = new Sequelize({
-        database: "test character db",
+        database: "flnpd_os_system_db",
         dialect: 'sqlite',
-        storage: ":memory:"
+        storage: "./flnpd_os_system_db.sqlite3"
     });
 
     static async ClearDatabase( )
