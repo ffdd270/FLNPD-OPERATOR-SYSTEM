@@ -6,7 +6,7 @@ export class CharacterModel
 {
     static NoRoomError : string = `이런. 이 채널엔 방이 없네. !use_room "<방_이름>"으로 하나 만들어 보는 건 어때?`;
     static NoCharacterError : string  = `그런 캐릭터는 못 찾았어.`;
-    static UnitFindRegex = /^"(.+)"$/;
+    static UnitFindRegex = /^"(.+)"/;
     static UnitAndNumberRegex = /^"(.+)"\s+(\d+)$/;
     static UnitAndStringRegex = /^"(.+)"\s+"(.+)"$/;
 
