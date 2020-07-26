@@ -123,7 +123,7 @@ export class CharacterCommands
             error_string: `땡. 사용법은 !gain "<캐릭터_이름>" <얻을_SP> 야.`
         };
 
-        let sp_params = CharacterModel.CheckParamsForPointArguments( params, obj );
+        let sp_params = CharacterModel.GetParamsForPointArguments( params, obj );
 
         let character_doc = await CharacterModel.GetTargetDocument( params, room_id, obj );
         if( character_doc == null ) { return obj.error_string; }
@@ -142,14 +142,11 @@ export class CharacterCommands
             error_string: `땡. 사용법은 !use "<캐릭터_이름>" <사용_SP> 야.`
         };
 
-        let sp_params = CharacterModel.CheckParamsForPointArguments( params, obj );
-        if ( sp_params == null ) { return obj.error_string; }
-
+        let sp_args = CharacterModel.GetParamsForPointArguments( params, obj );
         let character_doc = await CharacterModel.GetTargetDocument( params, room_id, obj );
         if( character_doc == null ) { return obj.error_string; }
 
-        let sp = Number.parseInt( sp_params[2] );
-
+        let sp = Number.parseInt( sp_args[2] );
         let ok = CharacterModel.AddSp( character_doc, -sp, obj );
 
         if ( ok )
@@ -162,11 +159,45 @@ export class CharacterCommands
         }
     }
 
+    static async AddComment(params: string | null, message: Message)
+    {
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+
+        let obj = {
+            error_string: `땡. 사용법은 !comment "<캐릭터-이름>" "<할말>" 야.`
+        };
+
+        let comments_args = CharacterModel.GetParamsForStringArguments( params, obj );
+        let character_doc = await CharacterModel.GetTargetDocumentByRegexResult( comments_args, room_id, obj );
+        if ( character_doc == null ) { return obj.error_string; }
+
+        character_doc.comment = comments_args[2];
+        character_doc.save();
+
+        return character_doc.name + "에 코맨트, \"" + character_doc.comment + "\"가 추가 되었어.";
+    }
+
+    static async RemoveComment(params: string | null, message: Message)
+    {
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+
+        let obj = {
+            error_string: `땡. 사용법은 !remove_comment "<캐릭터-이름>" 야.`
+        };
+
+        let character_doc = await CharacterModel.GetTargetDocument( params, room_id, obj );
+        if ( character_doc == null ) { return obj.error_string; }
+
+        character_doc.comment = "";
+        character_doc.save();
+
+        return character_doc.name + "의 코맨트가 삭제 되었어.";
+    }
     static async GetStatus( params : string | null, message : Message )
     {
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
 
-        let character_docs = await CharacterDocuments.findAll( { where: { room_id: room_id } });
+        let character_docs = await CharacterDocuments.findAll( { where: { room_id: room_id } } );
         let result_string = "";
 
         for( let doc of character_docs )
@@ -180,9 +211,9 @@ export class CharacterCommands
             let sp_percent_string = CharacterCommands.percent_regex.exec( sp_percent.toString() );
 
             let dead_string = doc.hp > 0 ? "" : " 무력화. ";
+            let comment = doc.comment == undefined || doc.comment == "" ? " " : doc.comment + " ";
 
-            result_string += doc.name + " : HP " + doc.hp + "/" + doc.hp_max + "(" + percent_string + "%)" + ","
-                + " SP " + doc.sp + "/" + doc.sp_max + "(" + sp_percent_string + "%)" + dead_string  + "\n";
+            result_string += `${doc.name} : HP ${doc.hp}/${doc.hp_max}(${percent_string}%), SP ${doc.sp}/${doc.sp_max}(${sp_percent_string}%), ${comment} ${dead_string}\n`;
         }
 
         result_string = result_string == "" ?  "캐릭터가 없어." : result_string + "이상. 보고 끝.";
@@ -210,5 +241,9 @@ export class CharacterCommands
         parser.addCallback( 'gain', this.GainSkillPoint );
         parser.addCallback( 'use', this.UseSkillPoint );
         parser.addCallback( 'set_sp', this.SetMaxSkillPoint );
+
+        //comments
+        parser.addCallback( 'comment', this.AddComment );
+        parser.addCallback( 'remove_comment', this.RemoveComment );
     }
 }

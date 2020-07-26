@@ -73,6 +73,16 @@
               "command": "use_room",
               "data": "채널이 사용할 방을 설정해줘. 방이 없었다면 만들고. 있으면 그 방에 들어갈 거야. 방에 대한 설명은 what_room 명령어를 참고해 줘.",
               "usage": "use_room \"<방_이름>\""
+            },
+            {
+              "command": "comment",
+              "data": "대상에 설명문을 추가해 줄 수 있어.",
+              "usage": "!comment \"<설정_대상>\" \"<코맨트>\" "
+            },
+            {
+              "command": "remove_comment",
+              "data": "대상의 설명문을 지울 수 있어.",
+              "usage": "!remove_comment \"<설정_대상>\""
             }
           ]
 }

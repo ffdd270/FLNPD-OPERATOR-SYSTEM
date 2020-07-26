@@ -13,6 +13,9 @@ export class CharacterDocuments extends  Model<CharacterDocuments>
     @Column( DataType.TEXT )
     name! : string;
 
+    @Column( { type: DataType.TEXT, allowNull: true } )
+    comment? : string;
+
     @Column(DataType.INTEGER)
     hp_max! : number;
 
