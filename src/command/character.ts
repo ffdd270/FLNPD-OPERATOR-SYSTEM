@@ -99,7 +99,7 @@ export class CharacterCommands
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
 
         let obj = {
-            error_string: `땡. 사용법은 !set_sp "<캐릭터_이름>" <최대_SP> 야.`
+            error_string: `땡. 사용법은 !set_sp "<캐릭터_이름>" <최대SP> 야.`
         };
 
         let set_sp = CharacterModel.GetPointValue( params, obj );
