@@ -94,10 +94,13 @@ export class CharacterModel
     }
 
 
-    static GetTargetName( params : string ) : string | null
+    static GetTargetName( params : string ) : string
     {
         let result = CharacterModel.UnitFindRegex.exec( params );
-        if ( result == null ) { return null; }
+        if ( result == null )
+        {
+            throw { error_string: "BUG" };
+        }
 
         return result[1];
     }

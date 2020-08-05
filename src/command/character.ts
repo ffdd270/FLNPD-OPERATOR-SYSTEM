@@ -220,6 +220,21 @@ export class CharacterCommands
         return result_string;
     }
 
+    static  async Kill(params : string | null, message : Message )
+    {
+        if( params == null ) { return "파라미터 오류야."; }
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+        let target_name = CharacterModel.GetTargetName( params );
+
+        let char = await  CharacterDocuments.findOne( { where: { room_id: room_id, id: target_name } } );
+
+        if( char == null ) { return "" }
+
+        await CharacterDocuments.destroy( { where: { room_id: room_id, id: target_name } } );
+
+        return "캐릭터를 날려 버렸어!";
+    }
+
     static async KillAll(params : string | null, message : Message )
     {
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
@@ -236,6 +251,7 @@ export class CharacterCommands
         parser.addCallback( 'attack', this.Attack );
         parser.addCallback( 'status', this.GetStatus );
         parser.addCallback( 'KILL_ALL', this.KillAll );
+        parser.addCallback( 'KILL', this.Kill );
 
         //sp
         parser.addCallback( 'gain', this.GainSkillPoint );
