@@ -20,7 +20,7 @@ const { token } = require ( "../config.json" ) ;
 let client = new Discord.Client();
 let parsing = new Parser();
 
-parsing.addCallback('roll', async (params : string | null)  =>
+let roll = async (params : string | null)  =>
 {
     let err_string = `땡. 사용법은 !roll <주사위 최대값> <?주사위 굴릴 횟수> 야. `;
 
@@ -42,7 +42,10 @@ parsing.addCallback('roll', async (params : string | null)  =>
     }
     result_string += "```";
     return result_string;
-});
+};
+
+parsing.addCallback('roll',  roll );
+parsing.addCallback('r',  roll );
 
 CharacterCommands.addCommand( parsing );
 ChannelCommand.addCommand( parsing );

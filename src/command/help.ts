@@ -5,6 +5,7 @@ const { help, help_all } = require ( "../../help.json" ) ;
 class HelpCommand
 {
     public command! : string;
+    public simple_command? :string;
     public data! : string;
     public usage! : string;
 
@@ -28,6 +29,10 @@ export class HelpCommands
         for ( let obj of commands )
         {
             result_string += "!" + obj.command + "\n";
+            if( obj.simple_command != undefined )
+            {
+                result_string += "단축 명령어 : !" + obj.simple_command + "\n";
+            }
             result_string +=  "```" + obj.data + "\n\n";
             result_string += "사용법은, !" + obj.usage + "```\n";
         }

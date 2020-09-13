@@ -247,19 +247,37 @@ export class CharacterCommands
     static addCommand( parser : Parser )
     {
         parser.addCallback( 'add', this.AddActor );
+        parser.addCallback( 'ad', this.AddActor );
+
         parser.addCallback( "set_hp", this.SetHp );
+        parser.addCallback( "s_h", this.SetHp );
+
         parser.addCallback( 'attack', this.Attack );
-        parser.addCallback( 'status', this.GetStatus );
+        parser.addCallback( 'ak', this.Attack );
+
+        parser.addCallback( 'status', this.GetStatus )
+        parser.addCallback( 's', this.GetStatus );
+
         parser.addCallback( 'KILL_ALL', this.KillAll );
+
         parser.addCallback( 'KILL', this.Kill );
+        parser.addCallback( 'K', this.Kill );
 
         //sp
         parser.addCallback( 'gain', this.GainSkillPoint );
+        parser.addCallback( 'g', this.GainSkillPoint );
+
         parser.addCallback( 'use', this.UseSkillPoint );
+        parser.addCallback( 'use', this.UseSkillPoint );
+
         parser.addCallback( 'set_sp', this.SetMaxSkillPoint );
+        parser.addCallback( 's_s', this.SetMaxSkillPoint );
 
         //comments
         parser.addCallback( 'comment', this.AddComment );
+        parser.addCallback( 'c', this.AddComment );
+
         parser.addCallback( 'remove_comment', this.RemoveComment );
+        parser.addCallback( 'r_c', this.RemoveComment );
     }
 }
