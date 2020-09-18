@@ -8,11 +8,6 @@ import Discord, {Message} from 'discord.js';
 import {Parser} from "./command/parser";
 import {Database} from "./db/database";
 
-import {CharacterCommands} from "./command/character";
-import {ChannelCommand} from "./command/channel";
-import {HelpCommands} from "./command/help";
-
-
 const { token } = require ( "../config.json" ) ;
 
 let client = new Discord.Client();
@@ -45,9 +40,15 @@ let roll = async (params : string | null)  =>
 parsing.addCallback('roll',  roll );
 parsing.addCallback('r',  roll );
 
+import {CharacterCommands} from "./command/character";
+import {ChannelCommand} from "./command/channel";
+import {HelpCommands} from "./command/help";
+import {InventoryCommands} from "./command/inventory";
+
 CharacterCommands.addCommand( parsing );
 ChannelCommand.addCommand( parsing );
 HelpCommands.addCommand( parsing );
+InventoryCommands.addCommand( parsing );
 
 import {CharacterDocuments} from "./db/documents/character";
 import {ChannelDocuments} from "./db/documents/channel";

@@ -1,6 +1,6 @@
-import {ChannelDocuments} from "../db/documents/channel";
 import {Message} from "discord.js";
 import {CharacterDocuments} from "../db/documents/character";
+import {ModelUtil} from  "./util";
 
 export class CharacterModel
 {
@@ -12,14 +12,7 @@ export class CharacterModel
 
     static async GetRoomIdFromMessage( message : Message ) : Promise<string>
     {
-        let channel = await ChannelDocuments.findOne( { where: { channel_id: message.channel.id }} );
-
-        if(channel == null)
-        {
-            throw { error_string: CharacterModel.NoRoomError };
-        }
-
-        return channel.room_id;
+        return ModelUtil.GetRoomIdFromMessage( message );
     }
 
     static async GetTargetDocumentByRegexResult( regex_result : RegExpExecArray, room_id : string, ref: { error_string: string } ) : Promise<CharacterDocuments | null>
