@@ -12,8 +12,6 @@ import {CharacterCommands} from "./command/character";
 import {ChannelCommand} from "./command/channel";
 import {HelpCommands} from "./command/help";
 
-import {CharacterDocuments} from "./db/documents/character";
-import {ChannelDocuments} from "./db/documents/channel";
 
 const { token } = require ( "../config.json" ) ;
 
@@ -51,9 +49,14 @@ CharacterCommands.addCommand( parsing );
 ChannelCommand.addCommand( parsing );
 HelpCommands.addCommand( parsing );
 
+import {CharacterDocuments} from "./db/documents/character";
+import {ChannelDocuments} from "./db/documents/channel";
+import {ItemDocuments} from "./db/documents/item";
+import {InventoryDocuments} from "./db/documents/inventory";
+
 client.once( 'ready', async () => {
     await Database.ClearDatabase();
-    await Database.AddModels([CharacterDocuments, ChannelDocuments]);
+    await Database.AddModels([CharacterDocuments, ChannelDocuments, ItemDocuments, InventoryDocuments]);
     console.log("READY.");
 });
 
