@@ -13,7 +13,7 @@ export class InventoryCommands
         let room_id = await ModelUtil.GetRoomIdFromMessage( message );
 
         let obj = {
-            error_string: `떙. 사용법은 !make_item <아이템 이름> <설명?> 이야.`
+            error_string: `떙. 사용법은 !make_item "<아이템 이름>" "<설명?>" 이야.`
         };
 
         if ( params == null ) { return obj.error_string; }
@@ -50,9 +50,29 @@ export class InventoryCommands
         return result_string;
     }
 
+    static async SetDesc( params : string | null, message : Message )
+    {
+        let room_id = await ModelUtil.GetRoomIdFromMessage( message );
+
+        let obj = {
+            error_string: `땡. 사용법은 !set_desc "<아이템 이름>" "<설명?>" 이야. 설명을 비워 놓으면, 설명이 비워져.`
+        }
+        if ( params == null ) { return "이런. 명령이 이상한 것 같은데."; }
+        let item = await InventoryModel.GetTargetItemDocument( params, room_id, obj );
+        if ( item == null ) { return "존재하지 않은 아이템에 설명을 바꾸려고 하고 있어. 이 아이템이 맞는 지 확인해줄래?"; }
+
+        let item_info = InventoryModel.GetNameOrDescriptionFromParams( params );
+        item.desc = item_info.desc;
+
+        await item.save();
+
+        return `${item.name}의 설명이 변경 되었어.`;
+    }
+
     static addCommand( parser : Parser )
     {
         parser.addCallback( 'make_item', this.MakeItem );
         parser.addCallback( 'item_list', this.ItemList );
+        parser.addCallback( 'set_desc', this.SetDesc );
     }
 }
