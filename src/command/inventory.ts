@@ -30,8 +30,29 @@ export class InventoryCommands
         return item_info.item_id + "(이)가 이 방에 생성되었어.";
     }
 
+    static async ItemList( params : string | null, message : Message )
+    {
+        let room_id = await ModelUtil.GetRoomIdFromMessage( message );
+        let items = await InventoryModel.GetItemDocuments( room_id );
+
+        let result_string = ''
+        result_string += "여기. 이 방에 존재하는 아이템들의 목록이야.\n";
+
+        result_string += "```\n";
+
+        for ( let item of items )
+        {
+            result_string += `${item.name} : ${item.desc}\n`;
+        }
+
+        result_string += "```\n";
+
+        return result_string;
+    }
+
     static addCommand( parser : Parser )
     {
         parser.addCallback( 'make_item', this.MakeItem );
+        parser.addCallback( 'item_list', this.ItemList );
     }
 }

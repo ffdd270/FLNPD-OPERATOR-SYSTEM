@@ -31,6 +31,12 @@ export class InventoryModel
         return await InventoryModel.GetTargetItemDocumentByRegex( regex_result, room_id, error_handler );
     }
 
+    static GetItemDocuments( room_id : string ) : Promise<ItemDocuments[]>
+    {
+        return ItemDocuments.findAll({where: {room_id: room_id}});
+    }
+
+
     static GetNameOrDescriptionFromParams( params : string ) : { item_id : string, desc : string }
     {
         let obj = { item_id: 'temp', desc : "" };
