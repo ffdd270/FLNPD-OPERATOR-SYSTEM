@@ -73,7 +73,7 @@ export class InventoryCommands
     {
         let room_id = await ModelUtil.GetRoomIdFromMessage( message );
         let obj = {
-            error_string: `땡. 사용법은 !add_item <인벤토리 이름> <아이템 코드> <갯수?> 야. 갯수는 없으면 1이 들어가.`
+            error_string: `땡. 사용법은 !add_item "<인벤토리 이름>" "<아이템 코드>" <갯수?> 야. 갯수는 없으면 1이 들어가.`
         };
 
         if ( params == null ) { return obj.error_string; }
@@ -88,7 +88,7 @@ export class InventoryCommands
     {
         let room_id = await ModelUtil.GetRoomIdFromMessage( message );
         let obj = {
-            error_string: `땡. 사용법은 !dec_item <인벤토리 이름> <아이템 코드> <갯수?> 야. 갯수는 없으면 1이 들어가.`
+            error_string: `땡. 사용법은 !dec_item "<인벤토리 이름>" "<아이템 코드>" <갯수?> 야. 갯수는 없으면 1이 들어가.`
         };
         if ( params == null ) { return obj.error_string; }
 

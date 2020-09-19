@@ -111,6 +111,24 @@
                 "simple_command": "s_d",
                 "data": "아이템의 설명문을 지울 수 있어. 만약에 설명을 비워두면, 설명을 사라지게도 할 수 있지.",
                 "usage": "!set_desc \"<아이템 이름>\" \"<설명?>\""
+              },
+              {
+                "command": "add_item",
+                "simple_command": "a_i",
+                "data": "인밴토리에 아이템을 추가할 수 있어.",
+                "usage": "!add_item \"<인벤토리 이름>\" \"<아이템 코드>\" <갯수?>"
+              },
+              {
+                "command": "dec_item",
+                "simple_command": "d_i",
+                "data": "인벤토리에 아이템을 뺄 수 있어. 0이 되면 사라져.",
+                "usage": "!dec_item \"<인벤토리 이름>\" \"<아이템 코드>\" <갯수?>"
+              },
+              {
+                "command": "show_inven",
+                "simple_command": "s_i",
+                "data": "인벤토리의 내용물을 볼 수 있어.",
+                "usage": "!show_inven \"<인벤토리 이름>\""
               }
             ]
           ]
