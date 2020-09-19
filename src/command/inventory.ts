@@ -79,9 +79,48 @@ export class InventoryCommands
         if ( params == null ) { return obj.error_string; }
         
         obj.error_string = "존재하지 않은 아이템을 추가하려고 하고 있어. 이 아이템이 맞는 지 확인 해줘."
-        let result = await InventoryModel.AddItemDocument( params, room_id, obj );
+        let result = await InventoryModel.AddItemToInventoryDocument( params, room_id, obj );
 
-        return `${result.target_id}에 아이템 ${result.item_id}가 ${result.add_count}개 추가 되었어. 현재 수량은 ${result.result_count}개야.`;
+        return `${result.target_id}에 ${result.item_id}(이)가 ${result.add_count}개 추가 되었어. 현재 수량은 ${result.result_count}개야.`;
+    }
+
+    static async DecItemToInventory( params : string | null, message : Message )
+    {
+        let room_id = await ModelUtil.GetRoomIdFromMessage( message );
+        let obj = {
+            error_string: `땡. 사용법은 !dec_item <인벤토리 이름> <아이템 코드> <갯수?> 야. 갯수는 없으면 1이 들어가.`
+        };
+        if ( params == null ) { return obj.error_string; }
+
+        let inventory_item = await InventoryModel.GetInventoryDocument( params, room_id, obj );
+        obj.error_string = "존재하지 않은 아이템을 삭제하려고 하고 있어. 이 아이템이 맞는 지 확인 해줘."
+
+        if ( inventory_item == null ) { return obj.error_string; }
+
+        let dec_count = InventoryModel.ParseItemCount( params );
+
+        if ( inventory_item.item_count < dec_count )
+        {
+            return "보유한 아이템의 갯수보다 더 지우려고 시도 하고 있어. 수량을 다시 확인해줄래?";
+        }
+
+        if ( dec_count < 1 )
+        {
+            return "수량은 반드시 0보다는 커야해.";
+        }
+
+        let item_id = inventory_item.item_id;
+
+        if ( inventory_item.item_count == dec_count )
+        {
+            await inventory_item.destroy();
+            return `${item_id}의 보유량이 0가 되었어.`;
+        }
+
+        inventory_item.item_count -= dec_count;
+        await inventory_item.save();
+
+        return `${item_id}의 보유량이 ${inventory_item.item_count} 남았어.`;
     }
 
 
@@ -98,5 +137,8 @@ export class InventoryCommands
 
         parser.addCallback( 'add_item', this.AddItemToInventory );
         parser.addCallback( 'a_i', this.AddItemToInventory );
+
+        parser.addCallback( 'dec_item', this.DecItemToInventory );
+        parser.addCallback( 'd_i', this.DecItemToInventory );
     }
 }

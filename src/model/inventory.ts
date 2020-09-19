@@ -7,12 +7,12 @@ type AddItemResult = { target_id : string, item_id : string ,add_count : number,
 export class InventoryModel
 {
     static OptionalMakeItemCommandRegex = /^"(.+)"/;
-    static GetItemRegex = /^"([^"]+)"/;
+    static GetItemTargetRegex = /^"([^"]+)"/;
     static GetOptionalDescRegex = /"[ ]+"(.+)"/;
     static NoItemError = "그런 아이템은 없어.";
 
-    static AddItemToInventoryRegex = /"([^"]+)"\s+"([^"]+)"/;
-    static GetItemCountRegex = /"[^"]+"\s+"[^"]+"\s+(\d)/;
+    static GetItemToInventoryRegex = /"([^"]+)"\s+"([^"]+)"/;
+    static GetItemCountFromInventoryRegex = /"[^"]+"\s+"[^"]+"\s+(\d)/;
 
     static async GetTargetItemDocumentByRegex(  regex_result : RegExpExecArray, room_id : string, error_handler : { error_string : string } ) : Promise<ItemDocuments | null>
     {
@@ -32,7 +32,7 @@ export class InventoryModel
     {
         if ( params == null ) { throw error_handler; }
 
-        let regex_result = InventoryModel.GetItemRegex.exec( params );
+        let regex_result = InventoryModel.GetItemTargetRegex.exec( params );
         if ( regex_result == null ) { throw error_handler; }
 
         return await InventoryModel.GetTargetItemDocumentByRegex( regex_result, room_id, error_handler );
@@ -47,7 +47,7 @@ export class InventoryModel
     static GetNameOrDescriptionFromParams( params : string ) : { item_id : string, desc : string }
     {
         let obj = { item_id: 'temp', desc : "" };
-        let item = InventoryModel.GetItemRegex.exec( params );
+        let item = InventoryModel.GetItemTargetRegex.exec( params );
 
         if (item == null) { throw { error_string: "이런. 여기는 원래 망가지면 안 되는 곳인데. KuroNeko한테 알려 주면 좋겠어! 추가 정보 : GetNameOrDescriptionFromParams" }; }
         obj.item_id = item[1];
@@ -60,9 +60,33 @@ export class InventoryModel
     }
 
 
-    static async AddItemDocument( params : string, room_id : string, error_handler : { error_string : string } ) : Promise<AddItemResult>
+    static async GetInventoryDocument( params : string, room_id : string, error_handler : { error_string : string } ) : Promise<InventoryDocuments | null>
     {
-        let regex_result = InventoryModel.AddItemToInventoryRegex.exec( params );
+        let regex_result = InventoryModel.GetItemToInventoryRegex.exec( params );
+        if ( regex_result == null ) { throw error_handler; }
+
+        let target_id = regex_result[1];
+        let item_id = regex_result[2];
+
+        return InventoryDocuments.findOne( { where: { id: target_id, room_id: room_id, item_id: item_id } } );
+    }
+
+    static ParseItemCount( params : string, default_value : number = 1 )
+    {
+        let count = default_value;
+        let parse_count = InventoryModel.GetItemCountFromInventoryRegex.exec( params );
+
+        if ( parse_count != null )
+        {
+            count = Number.parseInt( parse_count[1] );
+        }
+
+        return count;
+    }
+
+    static async AddItemToInventoryDocument(params : string, room_id : string, error_handler : { error_string : string } ) : Promise<AddItemResult>
+    {
+        let regex_result = InventoryModel.GetItemToInventoryRegex.exec( params );
         if ( regex_result == null ) { throw error_handler; }
 
         let target_id = regex_result[1];
@@ -75,7 +99,7 @@ export class InventoryModel
             throw error_handler;
         }
 
-        let inven_item = await  InventoryDocuments.findOne( { where: { id: target_id, item_id: item_id } } );
+        let inven_item = await  InventoryDocuments.findOne( { where: { id: target_id, room_id: room_id, item_id: item_id } } );
 
         if ( inven_item == null )
         {
@@ -83,18 +107,20 @@ export class InventoryModel
             await inven_item.save();
         }
 
-        let count = 1;
-        let parse_count = InventoryModel.GetItemCountRegex.exec( params );
-
-        if ( parse_count != null )
-        {
-            count = Number.parseInt( parse_count[1] );
-        }
-
+        let count = InventoryModel.ParseItemCount( params );
         inven_item.item_count += count;
 
         await inven_item.save();
 
         return { target_id: inven_item.id, item_id: item_id, add_count: count, result_count: inven_item.item_count };
     }
+
+
+
+
+    static async DecItemDocument( )
+    {
+
+    }
+
 }
