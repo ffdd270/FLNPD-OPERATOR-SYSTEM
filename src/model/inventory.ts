@@ -7,7 +7,7 @@ type AddItemResult = { target_id : string, item_id : string ,add_count : number,
 export class InventoryModel
 {
     static OptionalMakeItemCommandRegex = /^"(.+)"/;
-    static GetItemTargetRegex = /^"([^"]+)"/;
+    static GetTargetRegex = /^"([^"]+)"/;
     static GetOptionalDescRegex = /"[ ]+"(.+)"/;
     static NoItemError = "그런 아이템은 없어.";
 
@@ -32,7 +32,7 @@ export class InventoryModel
     {
         if ( params == null ) { throw error_handler; }
 
-        let regex_result = InventoryModel.GetItemTargetRegex.exec( params );
+        let regex_result = InventoryModel.GetTargetRegex.exec( params );
         if ( regex_result == null ) { throw error_handler; }
 
         return await InventoryModel.GetTargetItemDocumentByRegex( regex_result, room_id, error_handler );
@@ -47,7 +47,7 @@ export class InventoryModel
     static GetNameOrDescriptionFromParams( params : string ) : { item_id : string, desc : string }
     {
         let obj = { item_id: 'temp', desc : "" };
-        let item = InventoryModel.GetItemTargetRegex.exec( params );
+        let item = InventoryModel.GetTargetRegex.exec( params );
 
         if (item == null) { throw { error_string: "이런. 여기는 원래 망가지면 안 되는 곳인데. KuroNeko한테 알려 주면 좋겠어! 추가 정보 : GetNameOrDescriptionFromParams" }; }
         obj.item_id = item[1];
@@ -59,6 +59,25 @@ export class InventoryModel
         return obj;
     }
 
+    static async GetInventoryDocuments( params : string, room_id : string, error_handler : { error_string : string } ) : Promise<InventoryDocuments[]>
+    {
+        let inventory_id = InventoryModel.GetTargetRegex.exec( params );
+        if ( inventory_id == null ) { throw error_handler; }
+
+        return InventoryDocuments.findAll( { where: { id: inventory_id, room_id: room_id } } )
+    }
+
+    static ParseTargetName( params : string, error_handler : { error_string : string } )
+    {
+        let regex_result = InventoryModel.GetTargetRegex.exec(params);
+
+        if ( regex_result == null )
+        {
+            throw error_handler;
+        }
+
+        return regex_result[1];
+    }
 
     static async GetInventoryDocument( params : string, room_id : string, error_handler : { error_string : string } ) : Promise<InventoryDocuments | null>
     {

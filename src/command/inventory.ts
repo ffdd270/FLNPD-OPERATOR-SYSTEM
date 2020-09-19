@@ -123,6 +123,42 @@ export class InventoryCommands
         return `${item_id}의 보유량이 ${inventory_item.item_count} 남았어.`;
     }
 
+    static async ShowInventory( params : string | null, message : Message )
+    {
+        let room_id = await ModelUtil.GetRoomIdFromMessage(message);
+        let obj = {
+            error_string: `땡. 사용법은 !show_inven <인벤토리 이름> 야.`
+        };
+
+        if (params == null)
+        {
+            return obj.error_string;
+        }
+
+        let target_inventory_items = await InventoryModel.GetInventoryDocuments( params, room_id, obj );
+
+        let target_name = InventoryModel.ParseTargetName( params, obj );
+        let result_string = '';
+        result_string += `여기. ${target_name}의 인벤토리.\n`;
+        result_string += "```\n";
+        for ( let inventory_item of target_inventory_items )
+        {
+            // TODO : SELECT 잘 때리는 방법을 까먹어서 바보처럼 돈다. 하지만 지금은 귀찮고, 100명 안 팠 시스템이니 나중에 수정하는 걸로..
+
+            let item = await  ItemDocuments.findOne( {  where: { id: inventory_item.item_id, room_id: room_id }  }  );
+
+            if ( item == null )
+            {
+                return "이런. 뭔가 잘못됐었어. KuroNeko에게 알려 주면 고쳐 줄게. Addition Info : ShowInventory, let -> of loop.";
+            }
+
+            result_string += `${item.name} : ${item.desc}  / ${inventory_item.item_count}개\n`;
+        }
+
+        result_string += "```";
+
+        return result_string;
+    }
 
     static addCommand( parser : Parser )
     {
@@ -140,5 +176,8 @@ export class InventoryCommands
 
         parser.addCallback( 'dec_item', this.DecItemToInventory );
         parser.addCallback( 'd_i', this.DecItemToInventory );
+
+        parser.addCallback( "show_inven", this.ShowInventory);
+        parser.addCallback( "s_i", this.ShowInventory);
     }
 }
