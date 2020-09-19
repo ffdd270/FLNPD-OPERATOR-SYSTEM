@@ -72,7 +72,12 @@ export class InventoryCommands
     static addCommand( parser : Parser )
     {
         parser.addCallback( 'make_item', this.MakeItem );
+        parser.addCallback( 'm_i', this.MakeItem );
+
         parser.addCallback( 'item_list', this.ItemList );
+        parser.addCallback( 'i_l', this.ItemList );
+
         parser.addCallback( 'set_desc', this.SetDesc );
+        parser.addCallback( 's_d', this.SetDesc );
     }
 }
