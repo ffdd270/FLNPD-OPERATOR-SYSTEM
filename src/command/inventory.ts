@@ -57,9 +57,9 @@ export class InventoryCommands
         let obj = {
             error_string: `땡. 사용법은 !set_desc "<아이템 이름>" "<설명?>" 이야. 설명을 비워 놓으면, 설명이 비워져.`
         }
-        if ( params == null ) { return "이런. 명령이 이상한 것 같은데."; }
+        if ( params == null ) { return obj.error_string; }
         let item = await InventoryModel.GetTargetItemDocument( params, room_id, obj );
-        if ( item == null ) { return "존재하지 않은 아이템에 설명을 바꾸려고 하고 있어. 이 아이템이 맞는 지 확인해줄래?"; }
+        if ( item == null ) { return "존재하지 않은 아이템에 설명을 바꾸려고 하고 있어. 이 아이템이 맞는 지 확인 해줘."; }
 
         let item_info = InventoryModel.GetNameOrDescriptionFromParams( params );
         item.desc = item_info.desc;
@@ -68,6 +68,22 @@ export class InventoryCommands
 
         return `${item.name}의 설명이 변경 되었어.`;
     }
+
+    static async AddItemToInventory( params : string | null, message : Message )
+    {
+        let room_id = await ModelUtil.GetRoomIdFromMessage( message );
+        let obj = {
+            error_string: `땡. 사용법은 !add_item <인벤토리 이름> <아이템 코드> <갯수?> 야. 갯수는 없으면 1이 들어가.`
+        };
+
+        if ( params == null ) { return obj.error_string; }
+        
+        obj.error_string = "존재하지 않은 아이템을 추가하려고 하고 있어. 이 아이템이 맞는 지 확인 해줘."
+        let result = await InventoryModel.AddItemDocument( params, room_id, obj );
+
+        return `${result.target_id}에 아이템 ${result.item_id}가 ${result.add_count}개 추가 되었어. 현재 수량은 ${result.result_count}개야.`;
+    }
+
 
     static addCommand( parser : Parser )
     {
@@ -79,5 +95,8 @@ export class InventoryCommands
 
         parser.addCallback( 'set_desc', this.SetDesc );
         parser.addCallback( 's_d', this.SetDesc );
+
+        parser.addCallback( 'add_item', this.AddItemToInventory );
+        parser.addCallback( 'a_i', this.AddItemToInventory );
     }
 }

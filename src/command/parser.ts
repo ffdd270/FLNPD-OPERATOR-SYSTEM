@@ -41,6 +41,15 @@ export class Parser
         }
         catch( error_obj )
         {
+            if ( error_obj.sql )
+            {
+                let err_str = "이런. SQL 쿼리 오류야. KuroNeko에게 전달해줘.\n";
+                err_str += error_obj.sql + "\n";
+                err_str += error_obj.message + "\n";
+                return err_str;
+            }
+
+
             if ( error_obj.error_string != undefined )
             {
                 return error_obj.error_string;

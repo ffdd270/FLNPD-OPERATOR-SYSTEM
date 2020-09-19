@@ -9,7 +9,7 @@ export class InventoryDocuments extends  Model<InventoryDocuments>
     @Column( { primaryKey: true, type: DataType.STRING })
     room_id!: string;
 
-    @Column( { type: DataType.STRING } )
+    @Column( { primaryKey: true,  type: DataType.STRING } )
     item_id! : string; // ItemDocuments의 id.
 
     @Column( { type: DataType.INTEGER  } )
