@@ -26,92 +26,92 @@
           ],
   "help_all":
           [
-            {
-              "command": "add",
-              "simple_command": "ad",
-              "data": "캐릭터를 전장에 추가해. 명령어는 !add \"<캐릭터_이름>\" 으로 넣어 줘. 예를 들면.. !add \"KuroNeko\" 라던가. 아. 그리고 만들어진 캐릭터의 기본 채력은 5야.",
-              "usage": "add \"<캐릭터_이름>\""
-            },
-            {
-              "command": "set_hp",
-              "simple_command": "s_h",
-              "data": "캐릭터의 최대 채력을 설정 해 줄 수 있어. 명심할 건, 이 기능을 쓰면 체력을 가득 채워 준다는 거야. 명령어는 !set_hp \"<캐릭터_이름>\" <최대_채력> 으로 넣어줘. 예를 들면.. !set_hp \"Operator\" 30 . 이렇게 넣으면 Operator의 최대 채력이 30이 돼. ",
-              "usage": "set_hp \"<캐릭터_대상>\" <최대_채력> "
-            },
-            {
-              "command": "attack",
-              "simple_command": "at",
-              "data": "캐릭터를 공격할 때 사용 해. 명령어는 !attack \"<맞을_캐릭터>\" <대미지> 야. 그래서 !attack \"ShiroNeko\" 30 이라고 하면. ShiroNeko는 체력 30이 깎여. ",
-              "usage": "attack \"<공격_대상>\" <대미지>"
-            },
-            {
-              "command": "gain",
-              "simple_command": "g",
-              "data": "SP를 획득할 수 있어. 최대 SP 이상으로는 차오르지 않아.",
-              "usage": "gain \"<대상>\" <획득 SP>"
-            },
-            {
-              "command": "use",
-              "simple_command": "u",
-              "data": "SP를 사용할 수 있어. 0 미만으로 사용할 수는 없어.",
-              "usage": "use \"<사용_대상>\" <사용 SP>"
-            },
-            {
-              "command": "set_sp",
-              "simple_command": "s_s",
-              "data": "최대 SP를 설정할 수 있어.",
-              "usage": "set_sp \"<설정_대상>\" <MAX_SP>"
-            },
-            {
-              "command": "set_group",
-              "simple_command": "s_g",
-              "data": "전투 그룹을 만들 때 사용해. 이건 좀 어려워. 왜 이런 게 있냐면, 빠른 진행을 위해서 '적들을 미리 만들고 싶어!' 라는 생각이 들 수 있잖아? 그래서 미리 그룹으로 등록하고. 그걸 바로 전장에 내보낼 수 있도록 이 기능을 만들었어. 아. 아직은 개발 중이라서 의미는 없지만.",
-              "usage": "set_group <group_id> <params>..."
-            },
-            {
-              "command": "KILL_ALL",
-              "data": "강력한 명령어야. 현재 전투를 날려버려. 응. 무서운 명령어지. 조심히 써. 진짜로 지워버려서, 이 지구 상에서 찾아 볼 수 없게 될테니. 사용법은 !KILL_ALL ",
-              "usage": "KILL_ALL"
-            },
-            {
-              "command": "what_room",
-              "data": "내가 지금 어느 방에 있는지 알 수 있는 명령어야. 이 봇은 내부적으로 '방'이라는 개념을 사용 하는데. 모든 채널이 하나의 전투만 볼 수는 없으니까. 채널마다 방을 하나씩 만들 수 있게 하여 따로 놀도록 분리한거야. 하지만 오퍼레아터는 우리 유저들에게 보여주고 싶지 않은 명령어나 그런 게 있을 수도 있어서. '여러 채널'이 한 방에 들어갈 수 있도록 하여 '유저들이 있는 채널'과 '내가 명령어를 치는 채널'을 분리할 수 있게 했어. 더 자세한 설명이 필요하다면, @KuroNeko 를 태그해줘. ",
-              "usage": "what_room"
-            },
-            {
-              "command": "use_room",
-              "data": "채널이 사용할 방을 설정해줘. 방이 없었다면 만들고. 있으면 그 방에 들어갈 거야. 방에 대한 설명은 what_room 명령어를 참고해 줘.",
-              "usage": "use_room \"<방_이름>\""
-            },
-            {
-              "command": "comment",
-              "simple_command": "c",
-              "data": "대상에 설명문을 추가해 줄 수 있어.",
-              "usage": "!comment \"<설정_대상>\" \"<코맨트>\" "
-            },
-            {
-              "command": "remove_comment",
-              "simple_command": "r_c",
-              "data": "대상의 설명문을 지울 수 있어.",
-              "usage": "!remove_comment \"<설정_대상>\""
-            },
-            {
-              "command": "make_item",
-              "simple_command": "m_i",
-              "data": "유저에게 추가해 줄 아이템을 만들 수 있어. ?는 넣어도 되고 안 넣어도 돼. 설명은 set_desc로도 정해줄 수 있어.",
-              "usage": "!make_item \"<아이템 이름>\" \"<설명?>\""
-            },
-            {
-              "command": "item_list",
-              "simple_command": "i_l",
-              "data": "지금까지 만들었던 아이템의 목록을 볼 수 있어.",
-              "usage": "!item_list"
-            },
-            {
-              "command": "set_desc",
-              "simple_command": "s_d",
-              "data": "아이템의 설명문을 지울 수 있어. 만약에 설명을 비워두면, 설명을 사라지게도 할 수 있지.",
-              "usage": "!set_desc \"<아이템 이름>\" \"<설명?>\""
-            }
+            [
+              {
+                "command": "add",
+                "simple_command": "ad",
+                "data": "캐릭터를 전장에 추가해. 명령어는 !add \"<캐릭터_이름>\" 으로 넣어 줘. 예를 들면.. !add \"KuroNeko\" 라던가. 아. 그리고 만들어진 캐릭터의 기본 채력은 5야.",
+                "usage": "add \"<캐릭터_이름>\""
+              },
+              {
+                "command": "set_hp",
+                "simple_command": "s_h",
+                "data": "캐릭터의 최대 채력을 설정 해 줄 수 있어. 명심할 건, 이 기능을 쓰면 체력을 가득 채워 준다는 거야. 명령어는 !set_hp \"<캐릭터_이름>\" <최대_채력> 으로 넣어줘. 예를 들면.. !set_hp \"Operator\" 30 . 이렇게 넣으면 Operator의 최대 채력이 30이 돼. ",
+                "usage": "set_hp \"<캐릭터_대상>\" <최대_채력> "
+              },
+              {
+                "command": "attack",
+                "simple_command": "at",
+                "data": "캐릭터를 공격할 때 사용 해. 명령어는 !attack \"<맞을_캐릭터>\" <대미지> 야. 그래서 !attack \"ShiroNeko\" 30 이라고 하면. ShiroNeko는 체력 30이 깎여. ",
+                "usage": "attack \"<공격_대상>\" <대미지>"
+              },
+              {
+                "command": "set_sp",
+                "simple_command": "s_s",
+                "data": "최대 SP를 설정할 수 있어.",
+                "usage": "set_sp \"<설정_대상>\" <MAX_SP>"
+              },
+              {
+                "command": "gain",
+                "simple_command": "g",
+                "data": "SP를 획득할 수 있어. 최대 SP 이상으로는 차오르지 않아.",
+                "usage": "gain \"<대상>\" <획득 SP>"
+              },
+              {
+                "command": "use",
+                "simple_command": "u",
+                "data": "SP를 사용할 수 있어. 0 미만으로 사용할 수는 없어.",
+                "usage": "use \"<사용_대상>\" <사용 SP>"
+              },
+              {
+                "command": "comment",
+                "simple_command": "c",
+                "data": "대상에 설명문을 추가해 줄 수 있어.",
+                "usage": "!comment \"<설정_대상>\" \"<코맨트>\" "
+              },
+              {
+                "command": "remove_comment",
+                "simple_command": "r_c",
+                "data": "대상의 설명문을 지울 수 있어.",
+                "usage": "!remove_comment \"<설정_대상>\""
+              }
+            ],
+            [
+              {
+                "command": "KILL_ALL",
+                "data": "강력한 명령어야. 현재 전투를 날려버려. 응. 무서운 명령어지. 조심히 써. 진짜로 지워버려서, 이 지구 상에서 찾아 볼 수 없게 될테니. 사용법은 !KILL_ALL ",
+                "usage": "KILL_ALL"
+              },
+              {
+                "command": "what_room",
+                "data": "내가 지금 어느 방에 있는지 알 수 있는 명령어야. 이 봇은 내부적으로 '방'이라는 개념을 사용 하는데. 모든 채널이 하나의 전투만 볼 수는 없으니까. 채널마다 방을 하나씩 만들 수 있게 하여 따로 놀도록 분리한거야. 하지만 오퍼레아터는 우리 유저들에게 보여주고 싶지 않은 명령어나 그런 게 있을 수도 있어서. '여러 채널'이 한 방에 들어갈 수 있도록 하여 '유저들이 있는 채널'과 '내가 명령어를 치는 채널'을 분리할 수 있게 했어. 더 자세한 설명이 필요하다면, @KuroNeko 를 태그해줘. ",
+                "usage": "what_room"
+              },
+              {
+                "command": "use_room",
+                "data": "채널이 사용할 방을 설정해줘. 방이 없었다면 만들고. 있으면 그 방에 들어갈 거야. 방에 대한 설명은 what_room 명령어를 참고해 줘.",
+                "usage": "use_room \"<방_이름>\""
+              }
+            ],
+            [
+              {
+                "command": "make_item",
+                "simple_command": "m_i",
+                "data": "유저에게 추가해 줄 아이템을 만들 수 있어. ?는 넣어도 되고 안 넣어도 돼. 설명은 set_desc로도 정해줄 수 있어.",
+                "usage": "!make_item \"<아이템 이름>\" \"<설명?>\""
+              },
+              {
+                "command": "item_list",
+                "simple_command": "i_l",
+                "data": "지금까지 만들었던 아이템의 목록을 볼 수 있어.",
+                "usage": "!item_list"
+              },
+              {
+                "command": "set_desc",
+                "simple_command": "s_d",
+                "data": "아이템의 설명문을 지울 수 있어. 만약에 설명을 비워두면, 설명을 사라지게도 할 수 있지.",
+                "usage": "!set_desc \"<아이템 이름>\" \"<설명?>\""
+              }
+            ]
           ]
 }
