@@ -98,37 +98,37 @@
                 "command": "make_item",
                 "simple_command": "m_i",
                 "data": "유저에게 추가해 줄 아이템을 만들 수 있어. ?는 넣어도 되고 안 넣어도 돼. 설명은 set_desc로도 정해줄 수 있어.",
-                "usage": "!make_item \"<아이템 이름>\" \"<설명?>\""
+                "usage": "make_item \"<아이템 이름>\" \"<설명?>\""
               },
               {
                 "command": "item_list",
                 "simple_command": "i_l",
                 "data": "지금까지 만들었던 아이템의 목록을 볼 수 있어.",
-                "usage": "!item_list"
+                "usage": "item_list"
               },
               {
                 "command": "set_desc",
                 "simple_command": "s_d",
                 "data": "아이템의 설명문을 지울 수 있어. 만약에 설명을 비워두면, 설명을 사라지게도 할 수 있지.",
-                "usage": "!set_desc \"<아이템 이름>\" \"<설명?>\""
+                "usage": "set_desc \"<아이템 이름>\" \"<설명?>\""
               },
               {
                 "command": "add_item",
                 "simple_command": "a_i",
                 "data": "인밴토리에 아이템을 추가할 수 있어.",
-                "usage": "!add_item \"<인벤토리 이름>\" \"<아이템 코드>\" <갯수?>"
+                "usage": "add_item \"<인벤토리 이름>\" \"<아이템 이름>\" <갯수?>"
               },
               {
                 "command": "dec_item",
                 "simple_command": "d_i",
                 "data": "인벤토리에 아이템을 뺄 수 있어. 0이 되면 사라져.",
-                "usage": "!dec_item \"<인벤토리 이름>\" \"<아이템 코드>\" <갯수?>"
+                "usage": "dec_item \"<인벤토리 이름>\" \"<아이템 이름>\" <갯수?>"
               },
               {
                 "command": "show_inven",
                 "simple_command": "s_i",
                 "data": "인벤토리의 내용물을 볼 수 있어.",
-                "usage": "!show_inven \"<인벤토리 이름>\""
+                "usage": "show_inven \"<인벤토리 이름>\""
               }
             ]
           ]
