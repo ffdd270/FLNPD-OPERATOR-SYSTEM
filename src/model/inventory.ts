@@ -12,7 +12,7 @@ export class InventoryModel
     static NoItemError = "그런 아이템은 없어.";
 
     static GetItemToInventoryRegex = /"([^"]+)"\s+"([^"]+)"/;
-    static GetItemCountFromInventoryRegex = /"[^"]+"\s+"[^"]+"\s+(\d)/;
+    static GetItemCountFromInventoryRegex = /"[^"]+"\s+"[^"]+"\s+(\d+)/;
 
     static async GetTargetItemDocumentByRegex(  regex_result : RegExpExecArray, room_id : string, error_handler : { error_string : string } ) : Promise<ItemDocuments | null>
     {
