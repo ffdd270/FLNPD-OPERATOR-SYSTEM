@@ -4,6 +4,7 @@ import {InventoryDocuments} from "../db/documents/inventory";
 
 type AddItemResult = { target_id : string, item_id : string ,add_count : number, result_count : number  };
 
+
 export class InventoryModel
 {
     static OptionalMakeItemCommandRegex = /^"(.+)"/;
@@ -118,7 +119,7 @@ export class InventoryModel
             throw error_handler;
         }
 
-        let inven_item = await  InventoryDocuments.findOne( { where: { id: target_id, room_id: room_id, item_id: item_id } } );
+        let inven_item = await InventoryDocuments.findOne( { where: { id: target_id, room_id: room_id, item_id: item_id } } );
 
         if ( inven_item == null )
         {
@@ -134,12 +135,27 @@ export class InventoryModel
         return { target_id: inven_item.id, item_id: item_id, add_count: count, result_count: inven_item.item_count };
     }
 
-
-
-
-    static async DecItemDocument( )
+    static async GetInventoriesByRoomId( room_id : string ) : Promise<string[]>
     {
+        // TODO : Inventory ID DB 따로 파는 게 나을듯
+        // 그런데 sqlite 부터 글렀으니까.. 그냥... 이렇게.. 살자..
+        let items = await InventoryDocuments.findAll( { where: { room_id: room_id } } )
 
+        if( items == null ) { return []; }
+
+
+        let hash : { [key : string] : boolean } = {}
+        let return_array : string[] = []
+
+        for ( let item of items )
+        {
+            if ( hash[item.id] === undefined )
+            {
+                hash[item.id] = true;
+                return_array.push( item.id )
+            }
+        }
+
+        return return_array;
     }
-
 }

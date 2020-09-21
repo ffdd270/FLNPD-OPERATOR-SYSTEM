@@ -160,6 +160,24 @@ export class InventoryCommands
         return result_string;
     }
 
+    static async ShowInventoriesList( params : string | null, message : Message )
+    {
+        let room_id = await ModelUtil.GetRoomIdFromMessage(message);
+        let inventories = await InventoryModel.GetInventoriesByRoomId( room_id );
+
+        let result_string = `여기. 이 방의 있는 인벤토리 목록.\n`;
+        result_string += "```\n";
+
+        for ( let inven_name of inventories )
+        {
+            result_string += `${inven_name} \n`;
+        }
+
+        result_string += "```\n";
+
+        return result_string;
+    }
+
     static addCommand( parser : Parser )
     {
         parser.addCallback( 'make_item', this.MakeItem );
@@ -179,5 +197,7 @@ export class InventoryCommands
 
         parser.addCallback( "show_inven", this.ShowInventory);
         parser.addCallback( "s_i", this.ShowInventory);
+
+        parser.addCallback( "inven_list", this.ShowInventoriesList );
     }
 }
