@@ -56,6 +56,7 @@ export class CharacterCommands
     }
 
 
+
     static async Attack( params : string | null, message : Message  )
     {
         let room_id = await CharacterModel.GetRoomIdFromMessage( message );
@@ -70,20 +71,7 @@ export class CharacterCommands
         if( character_doc == null ) { return CharacterModel.NoCharacterError; }
 
         let dmg = CharacterModel.GetPointValue( params, obj );
-
-        character_doc.hp -= dmg;
-        character_doc.hp = Math.min( character_doc.hp,  character_doc.hp_max ); // 최소 값 보정.
-
-        let after = character_doc.hp;
-
-        character_doc.save();
-
-        let hp_max = character_doc.hp_max == null || character_doc.hp_max == 0 ? 1 : character_doc.hp_max;
-        let percent = ( character_doc.hp / hp_max ) * 100;
-        let percent_regex  = CharacterCommands.percent_regex.exec( percent.toString() );
-        let percent_string = percent_regex ? percent_regex[0] : "ERROR_PERCENT" ;
-
-        let after_string = "체력은 " + after + "(" + percent_string + "%) 남았어.";
+        let after_string = CharacterModel.AdjustHp( character_doc, -dmg );
 
         if( character_doc.hp <= 0 )
         {
@@ -93,6 +81,24 @@ export class CharacterCommands
         return character_doc.name + "은(는) " + dmg + "데미지를 받았고, " + after_string;
     }
 
+    static async Heal( params : string | null, message : Message )
+    {
+        let room_id = await CharacterModel.GetRoomIdFromMessage( message );
+
+        let obj = {
+            error_string: `땡. 사용법은  !attack <회복할 사람> <회복량> 야.`
+        };
+
+        if( params == null ) { return obj.error_string; }
+
+        let character_doc = await CharacterModel.GetTargetDocument( params, room_id, obj );
+        if( character_doc == null ) { return CharacterModel.NoCharacterError; }
+
+        let heal_point = CharacterModel.GetPointValue( params, obj );
+        let after_string = CharacterModel.AdjustHp( character_doc, heal_point );
+
+        return character_doc.name + "은(는) " + heal_point + "만큼 회복했고, " + after_string;
+    }
 
     static async SetMaxSkillPoint(  params : string | null, message : Message )
     {
@@ -254,6 +260,9 @@ export class CharacterCommands
 
         parser.addCallback( 'attack', this.Attack );
         parser.addCallback( 'ak', this.Attack );
+
+        parser.addCallback( 'Heal', this.Heal );
+        parser.addCallback( 'h', this.Heal );
 
         parser.addCallback( 'status', this.GetStatus )
         parser.addCallback( 's', this.GetStatus );

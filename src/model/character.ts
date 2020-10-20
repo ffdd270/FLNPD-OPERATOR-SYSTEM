@@ -1,6 +1,7 @@
 import {Message} from "discord.js";
 import {CharacterDocuments} from "../db/documents/character";
 import {ModelUtil} from  "./util";
+import {CharacterCommands} from "../command/character";
 
 export class CharacterModel
 {
@@ -84,6 +85,25 @@ export class CharacterModel
 
         character_doc.save();
         return true;
+    }
+
+
+    static AdjustHp( character_doc : CharacterDocuments, point : number )
+    {
+        character_doc.hp += point;
+        character_doc.hp = Math.min( character_doc.hp,  character_doc.hp_max ); // 최소 값 보정.
+        character_doc.hp = Math.max( character_doc.hp,  0 ); // 최대 값 보정.
+
+        let after = character_doc.hp;
+
+        character_doc.save();
+
+        let hp_max = character_doc.hp_max == null || character_doc.hp_max == 0 ? 1 : character_doc.hp_max;
+        let percent = ( character_doc.hp / hp_max ) * 100;
+        let percent_regex  = CharacterCommands.percent_regex.exec( percent.toString() );
+        let percent_string = percent_regex ? percent_regex[0] : "ERROR_PERCENT" ;
+
+        return "체력은 " + after + "(" + percent_string + "%)야.";
     }
 
 

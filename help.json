@@ -46,6 +46,12 @@
                 "usage": "attack \"<공격_대상>\" <대미지>"
               },
               {
+                "command": "heal",
+                "simple_command": "h",
+                "data": "캐릭터를 회복할 때 사용 해. 명령어는 !heal \"<회복_캐릭터>\" <대미지> 야. 그래서 !heal \"KuroNeko\" 30 이라고 하면. KuroNeko 체력 30이 회복돼. ",
+                "usage": "attack \"<공격_대상>\" <대미지>"
+              },
+              {
                 "command": "set_sp",
                 "simple_command": "s_s",
                 "data": "최대 SP를 설정할 수 있어.",
